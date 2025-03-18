@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id        String   @id @default(uuid())
+  title     String
+  url       String
+  content   String
+  createdAt DateTime @default(now())
+  Summary   Summary?
+}
+
+model Summary {
+  id        String   @id @default(uuid())
+  articleId String   @unique
+  summary   String
+  createdAt DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id])
+  Post    Post?
+  Ad      Ad?
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  summaryId String   @unique
+  post      String
+  createdAt DateTime @default(now())
+
+  summary Summary @relation(fields: [summaryId], references: [id])
+}
+
+model Ad {
+  id             String   @id @default(uuid())
+  summaryId      String   @unique
+  recommendation String
+  createdAt      DateTime @default(now())
+
+  summary Summary @relation(fields: [summaryId], references: [id])
+}
